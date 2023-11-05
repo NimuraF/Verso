@@ -14,15 +14,15 @@ return new class extends Migration
     {
         Schema::create('users_chats', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('first_user_id')->unsigned();
-            $table->bigInteger('second_user_id')->unsigned();
-            $table->string('name')->nullable()->default(null);
+            $table->bigInteger('chat_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->enum('chat_role', ['admin', 'moderator', 'user'])->default('user');
             $table->timestamps();
 
-            $table->foreign('first_user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('second_user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('chat_id')->references('id')->on('chats')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unique(['first_user_id', 'second_user_id']);
+            $table->unique(['chat_id', 'user_id']);
         });
     }
 

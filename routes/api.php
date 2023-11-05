@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,9 @@ use Illuminate\Support\Facades\Route;
 include __DIR__."/auth.php";
 
 
-Route::get('/chats', [UserController::class, 'id']);
+/* CHATS ROUTES GROUP */
+Route::middleware(['api', 'auth'])->prefix('chats')->controller(ChatController::class)->group( function () {
+
+    Route::get('/', 'allChats');
+
+});

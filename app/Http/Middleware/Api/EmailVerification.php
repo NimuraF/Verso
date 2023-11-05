@@ -18,8 +18,6 @@ class EmailVerification
     public function handle(Request $request, Closure $next): Response
     {
 
-        var_dump($request->user()->hasVerifiedEmail());
-
         if
         (
             $request->user() instanceof MustVerifyEmail

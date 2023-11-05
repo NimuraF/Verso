@@ -8,13 +8,18 @@ use Illuminate\Http\Request;
 
 class Auth extends Middleware
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     */
-    protected function redirectTo(Request $request): ?string
-    {
 
-        throw new AuthenticationException('You need to authenticate first');
-        
+    /**
+     * Action when user is unauthenticated
+     *
+     * @param Request $request
+     * @param array $guards
+     * @return void
+     */
+    protected function unauthenticated(Request $request, array $guards) : void {
+
+        throw new AuthenticationException('You need to log in first');
+
     }
+
 }

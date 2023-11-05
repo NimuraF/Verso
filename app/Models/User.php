@@ -67,34 +67,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     }
 
     /**
-     * Getter for combining all user chats
-     *
-     * @return Collection
-     */
-    public function getChatsAttribute() : Collection {
-
-        return $this->my_chats->merge($this->add_chats);
-        
-    }
-
-    /**
      * Chats, initiated by current user instance
      *
      * @return BelongsToMany
      */
-    public function my_chats() : BelongsToMany
+    public function chats() : BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'users_chats', 'first_user_id', 'second_user_id', 'id', 'id')->using(UsersChats::class)->as('chats');
-    }
-
-    /**
-     * Chats where the user was invited
-     *
-     * @return BelongsToMany
-     */
-    public function add_chats() : BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'users_chats', 'second_user_id', 'first_user_id', 'id', 'id')->using(UsersChats::class)->as('chats');
+        return $this->belongsToMany(Chat::class, 'users_chats', 'user_id', 'chat_id', 'id', 'id')->using(UsersChats::class)->as('chats');
     }
 
 }

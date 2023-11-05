@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['verso.ru'],
+    'allowed_origins' => ['verso.ru', 'http://verso.ru:5173'],
 
     'allowed_origins_patterns' => [],
 

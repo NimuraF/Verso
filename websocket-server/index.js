@@ -1,8 +1,15 @@
 const { createClient } = require('redis');
 
 const server = require('http').createServer()
-const options = {}
+const options = {
+    cors: {
+        origin: "http://verso.ru",
+        methods: ["GET", "POST"]
+    }
+}
 const io = require('socket.io')(server, options)
+
+server.listen(3000);
 
 async function main() {
 
@@ -16,13 +23,10 @@ async function main() {
 
     console.log('START SERVER!');
 
-    //console.log(await sub.get('verso_database_goggg'));
-
     io.on('connection', socket => {
         console.log(socket.id)
     })
 
-    server.listen(3000)
 }
 
 main();

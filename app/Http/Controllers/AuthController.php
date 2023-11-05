@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRegistrationRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\Auth\CreateAndUpdateRT;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class AuthController extends Controller {
 
         Redis::publish('message', 'HEELO FROM PHP BY'.$request->input('email'));
 
-        return $this->sendResponseWithCookies($request, $token, new UserResource(auth()->user()));
+        return $this->sendResponseWithCookies($request, $token, auth()->user());
 
     }
 
@@ -61,9 +62,7 @@ class AuthController extends Controller {
 
         $token = auth()->login($newUser);
 
-        $user = auth()->user();
-
-        return $this->sendResponseWithCookies($request, $token ?: '', (new UserResource($user)));
+        return $this->sendResponseWithCookies($request, $token, auth()->user());
 
     }
 
@@ -94,20 +93,46 @@ class AuthController extends Controller {
     }
 
     /**
-     * Setting jwt-token in cookies
+     * Undocumented function
      *
-     * @param UserResource $user
-     * @param string $token
+     * @param Request $request
      * @return JsonResponse
      */
-    private function sendResponseWithCookies(Request $request, string $token, UserResource|null $user = null, int|null $TTL = null, int|null $rTTL = null) : JsonResponse {
+    public function token(Request $request) : JsonResponse {
 
-        $domain = $request->header('Origin');
+        $user = CreateAndUpdateRT::getUserByRT($request);
 
-        $response = $user ? $user->response() : response()->json();
+        if (!$user) {
 
-        return $response
-            ->cookie('token', $token, $TTL ?: config('jwt.ttl'), '/', $domain);
+            throw new AuthenticationException('Ivalid token, please, try again');
+
+        }
+
+        $jwt = auth()->login($user);
+
+        return $this->sendResponseWithCookies($request, $jwt, $user);
+
+    }
+
+    /**
+     * Setting jwt-token in cookies
+     *
+     * @param Request $request
+     * @param string $token
+     * @param User|null|null $user
+     * @param integer|null|null $TTL
+     * @return JsonResponse
+     */
+    private function sendResponseWithCookies(Request $request, string $token, User|null $user = null, int|null $TTL = null) : JsonResponse {
+
+        $domain = parse_url($request->header('Origin'))['host'];
+
+        $userResource = $user ? new UserResource($user) : null; 
+
+        return response()
+            ->json(['data' => $userResource, 'expires_on' => 1])
+            ->cookie('token', $token, $TTL ?: config('jwt.ttl'), '/', $domain)
+            ->cookie('refresh-token', $user ? CreateAndUpdateRT::createRT($user) : '', 60*24*15, '/', $domain);
         
     }
 

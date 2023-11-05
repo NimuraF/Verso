@@ -2,6 +2,8 @@
 
 namespace App\Models\Pivot;
 
+use App\Models\Message;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class UsersChats extends Pivot
@@ -11,11 +13,6 @@ class UsersChats extends Pivot
 
     protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'first_user_id',
-        'second_user_id',
-        'name'
-    ];
-
+    protected $fillable = ['chat_id', 'user_id', 'chat_role'];
 
 }
