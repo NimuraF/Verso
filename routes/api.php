@@ -22,7 +22,7 @@ include __DIR__."/auth.php";
 
 /* CHATS ROUTES GROUP */
 Route::middleware(['api', 'auth'])->prefix('chats')->controller(ChatController::class)->group( function () {
-
     Route::get('/', 'allChats');
-
+    Route::get('/{id}', 'getChatMessages');
+    Route::post('/{id}', 'sendNewChatMessage');
 });

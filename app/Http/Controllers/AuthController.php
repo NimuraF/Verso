@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegistrationRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -20,7 +21,7 @@ class AuthController extends Controller {
      * @param Request $request
      * @return UserRerource
      */
-    public function login(Request $request) : JsonResponse {
+    public function login(UserLoginRequest $request) : JsonResponse {
 
         $authParams = $request->only(['email', 'password']);
 
@@ -29,8 +30,6 @@ class AuthController extends Controller {
             throw new AuthenticationException('Invalid login or password');
 
         }
-
-        Redis::publish('message', 'HEELO FROM PHP BY'.$request->input('email'));
 
         return $this->sendResponseWithCookies($request, $token, auth()->user());
 
@@ -46,13 +45,9 @@ class AuthController extends Controller {
 
         $regParams = $request->only(['name', 'email', 'password']);
 
-        $passwordHash = password_hash($regParams['password'], PASSWORD_DEFAULT);
+        $regParams['password'] = password_hash($regParams['password'], PASSWORD_DEFAULT);
 
-        $newUser = User::create([
-            'name' => $regParams['name'], 
-            'email' => $regParams['email'], 
-            'password' => $passwordHash
-        ]);
+        $newUser = User::create($regParams);
 
         if(!$newUser) {
 
@@ -100,9 +95,7 @@ class AuthController extends Controller {
      */
     public function token(Request $request) : JsonResponse {
 
-        $user = CreateAndUpdateRT::getUserByRT($request);
-
-        if (!$user) {
+        if (!$user = CreateAndUpdateRT::getUserByRT($request)) {
 
             throw new AuthenticationException('Ivalid token, please, try again');
 
@@ -130,7 +123,7 @@ class AuthController extends Controller {
         $userResource = $user ? new UserResource($user) : null; 
 
         return response()
-            ->json(['data' => $userResource, 'expires_on' => 1])
+            ->json(['data' => $userResource, 'expires_on' => time() + 3600])
             ->cookie('token', $token, $TTL ?: config('jwt.ttl'), '/', $domain)
             ->cookie('refresh-token', $user ? CreateAndUpdateRT::createRT($user) : '', 60*24*15, '/', $domain);
         
