@@ -25,4 +25,5 @@ Route::middleware(['api', 'auth'])->prefix('chats')->controller(ChatController::
     Route::get('/', 'allChats');
     Route::get('/{id}', 'getChatMessages');
     Route::post('/{id}', 'sendNewChatMessage');
+    Route::post('/connect/{id}', 'addNewChat');
 });

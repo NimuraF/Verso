@@ -17,7 +17,7 @@ class SendNewMessageToSocketIO
 
     public function handle(NewMessage $event): void
     {
-        Redis::publish('new-messages', json_encode([
+        Redis::publish('messages', json_encode([
             'chat_id' => $event->message->chat_id,
             'author_id' => $event->message->author_id,
             'message_body' => $event->message->message_body

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\NewChatParticipant;
 use App\Events\NewMessage;
+use App\Listeners\AddNewChatParticipantToSocketIO;
 use App\Listeners\SendNewMessageToSocketIO;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewMessage::class => [
             SendNewMessageToSocketIO::class
+        ],
+        NewChatParticipant::class => [
+            AddNewChatParticipantToSocketIO::class
         ]
     ];
 

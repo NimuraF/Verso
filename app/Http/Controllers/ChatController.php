@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewChatParticipant;
 use App\Events\NewMessage;
 use App\Http\Requests\NewChatMessageRequest;
 use App\Http\Resources\ChatColletion;
@@ -9,6 +10,7 @@ use App\Http\Resources\ChatResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\Pivot\UsersChats;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
@@ -27,10 +29,12 @@ class ChatController extends Controller
 {
     
     protected Chat $chat;
+    protected User $user;
 
     public function __construct(Chat $chat)
     {
         $this->chat = $chat;
+        $this->user = auth()->user();
     }
 
     /**
@@ -41,11 +45,33 @@ class ChatController extends Controller
      */
     public function allChats(Request $request) : ResourceCollection 
     {
-        $userWithChats = $request->user()->with(['chats.last_message' => function (Relation $query) {
+        $userWithChats = $this->user->with(['chats.last_message' => function (Relation $query) {
             $query->orderBy('id', 'DESC');
         }])->first();
 
         return ChatResource::collection($userWithChats->chats);
+    }
+
+    /**
+     * Add new chat
+     *
+     * @param Request $request
+     * @param UsersChats $usersChats
+     * @param string $id
+     * @return ChatResource
+     */
+    public function addNewChat(Request $request, UsersChats $usersChats, string $id) : ChatResource
+    {
+        $chat = $this->chat->findOrFail($id);
+
+        $usersChats->create([
+            'chat_id' => $chat->id,
+            'user_id' => $this->user->id
+        ]);
+
+        NewChatParticipant::dispatch($chat, $this->user);
+
+        return new ChatResource($chat);
     }
 
     /**

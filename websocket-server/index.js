@@ -1,4 +1,6 @@
 const { createClient } = require('redis');
+const { roomListener } = require('./redisListeners/roomsListener.js');
+const validateJWT = require('./services/ValidateJWT.js');
 
 const server = require('http').createServer()
 const options = {
@@ -8,31 +10,40 @@ const options = {
     }
 }
 
-const io = require('socket.io')(server, options)
+const io = require('socket.io')(server, options);
 
-server.listen(8080);
+const jwt_key = "websocket-key";
+
+server.listen(8080, () => {
+    console.log('Server start on port 8080');
+});
 
 async function main() {
 
     /**
-     * Create sub-client for REDIS PUB/SUB
+     * Create sub-client for messages REDIS PUB/SUB
      */
-    const sub = await createClient()
-    .on('error', err => console.log('Redis Client Error', err))
-    .connect();
+    // const messages = await createClient().on('error', err => console.log('Redis Client Error', err)).connect();
+    // await messages.subscribe('messages', messageListener);
 
-    const listener = (message, channel) => console.log(message, channel);
+    /**
+     * Create sub-client for rooms REDS PUB/SUB
+     */
+    const rooms = await createClient().on('error', err => console.log('Redis Client Error', err)).connect();
+    await rooms.subscribe('rooms', roomListener);
 
-    await sub.subscribe('new-messages', listener);
-
-    console.log('START SERVER!');
+    /**
+     * Create redis client for websocket map
+     */
+    const redisTokensWebsocket = await createClient({
+        database: 3
+    }).on('error', err => console.log('Redis Client Error', err)).connect();
 
     io.on('connection', socket => {
 
-        socket.on('sendik', function () {
-            socket.broadcast.emit("privet", { name: 30 })
-            console.log(socket.handshake.headers);
-        })
+        validateJWT(socket.handshake.headers.authorization, jwt_key);
+
+        redisTokensWebsocket.set(socket.id, 'SGSGSGSS');
 
         io.emit("Пользователь присоединился!");
     })
@@ -40,3 +51,7 @@ async function main() {
 }
 
 main();
+
+// function messageListener(message, channel) { 
+//     io.sockets.e
+// };

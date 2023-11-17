@@ -7,6 +7,7 @@ use App\Http\Requests\UserRegistrationRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\Auth\CreateAndUpdateRT;
+use App\Services\Websocket\CreateJWTForWebsocket;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -123,7 +124,11 @@ class AuthController extends Controller {
         $userResource = $user ? new UserResource($user) : null; 
 
         return response()
-            ->json(['data' => $userResource, 'expires_on' => time() + 3600])
+            ->json([
+                'data' => $userResource, 
+                'expires_on' => time() + 3600,
+                'websocket_jwt' => $user ? CreateJWTForWebsocket::createJWT($user) : null
+            ])
             ->cookie('token', $token, $TTL ?: config('jwt.ttl'), '/', $domain)
             ->cookie('refresh-token', $user ? CreateAndUpdateRT::createRT($user) : '', 60*24*15, '/', $domain);
         
