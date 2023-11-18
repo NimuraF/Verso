@@ -36,22 +36,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var jose_1 = require("jose");
-function validateJWT(jwt_token, secret_key) {
-    return __awaiter(this, void 0, void 0, function () {
-        var token, secret, payload, user_id;
+/**
+ * Callback function for redis messages channel listener
+ * @param io
+ * @returns Function
+ */
+function roomsListener(io) {
+    var _this = this;
+    return function (message, channel) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    token = jwt_token.split(" ")[1];
-                    secret = new TextEncoder().encode(secret_key);
-                    return [4 /*yield*/, (0, jose_1.jwtVerify)(token, secret)];
+                case 0: return [4 /*yield*/, io.to("chat:" + String(JSON.parse(message).chat_id)).emit('new-message', { message: message })];
                 case 1:
-                    payload = (_a.sent()).payload;
-                    user_id = payload.user_id ? String(payload.user_id) : null;
-                    return [2 /*return*/, user_id];
+                    _a.sent();
+                    return [2 /*return*/];
             }
         });
-    });
+    }); };
 }
-exports.default = validateJWT;
+exports.default = roomsListener;
