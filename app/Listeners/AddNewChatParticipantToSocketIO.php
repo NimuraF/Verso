@@ -7,13 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Redis;
 
-class AddNewChatParticipantToSocketIO
+class AddNewChatParticipantToSocketIO implements ShouldQueue
 {
 
-    public function __construct()
-    {
-        
-    }
+    public string $connection = 'redis';
 
     public function handle(NewChatParticipant $event): void
     {
