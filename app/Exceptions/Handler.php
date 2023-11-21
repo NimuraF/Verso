@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Throwable;
 
@@ -45,6 +46,13 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => $error->getMessage() ?: 'You do not have the rights to perform this action'
             ], 403);
+        });
+
+        /* VALIDATION ERROR WITH 400 RESPONSE */
+        $this->renderable(function (ValidationException $error) {
+            return response()->json([
+                'error' => $error->getMessage() ?: "Ooops, something went wrong!"
+            ], 400);
         });
 
 

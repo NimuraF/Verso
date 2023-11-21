@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Chat;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -24,14 +25,27 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->setRouteParamsBindings();
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
         $this->routes(function () {
-
             Route::middleware('api')->group(base_path('routes/api.php'));
-
         });
+    }
+
+    /**
+     * Set all route params bindings
+     *
+     * @return void
+     */
+    private function setRouteParamsBindings() : void 
+    {
+        Route::bind('chat', function (string $value) : Chat { 
+            return Chat::findOrFail($value); 
+        });
+
     }
 }

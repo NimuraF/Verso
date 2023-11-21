@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\UserActionsRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -9,6 +9,10 @@ class NewChatMessageRequest extends FormRequest
 
     public function authorize() : bool
     {
+        if($this->user->cannot('createMessage', $this->chat)) {
+            return false;
+        }
+        
         return true;
     }
 
@@ -18,4 +22,5 @@ class NewChatMessageRequest extends FormRequest
             'message_body' => ['required', 'string', 'min:1', 'max:1000']
         ];
     }
+    
 }

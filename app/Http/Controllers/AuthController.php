@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserLoginRequest;
-use App\Http\Requests\UserRegistrationRequest;
+use App\Http\Requests\AuthActionsRequests\UserLoginRequest;
+use App\Http\Requests\AuthActionsRequests\UserRegistrationRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\Auth\CreateAndUpdateRT;

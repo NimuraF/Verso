@@ -19,6 +19,7 @@ class ChatResource extends JsonResource
             'name' => $this->name,
             'about' => $this->about,
             'avatar' => $this->avatar,
+            'author_id' => $this->author_id,
             'last_message' => $this->whenLoaded('last_message')
         ];
     }

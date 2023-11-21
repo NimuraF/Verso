@@ -27,21 +27,21 @@ server.listen(8080, () => {
 async function main() : Promise<void> {
 
     /**
-     * Create sub-client for messages REDIS PUB/SUB
+     * Create redis client for websocket-sessions list
      */
-    const messages = await createClient().on('error', err => console.log('Redis Client Error', err)).connect();
-    await messages.subscribe('messages', messagesListener(io));
+    const redisTokensWebsocket = await createClient({database: 3}).on('error', err => console.log('Redis Client Error', err)).connect();
 
     /**
      * Create sub-client for rooms REDS PUB/SUB
      */
     const rooms = await createClient().on('error', err => console.log('Redis Client Error', err)).connect();
-    await rooms.subscribe('rooms', roomListener(io));
+    await rooms.subscribe('rooms', roomListener(io, redisTokensWebsocket));
 
     /**
-     * Create redis client for websocket-sessions list
+     * Create sub-client for messages REDIS PUB/SUB
      */
-    const redisTokensWebsocket = await createClient({database: 3}).on('error', err => console.log('Redis Client Error', err)).connect();
+    const messages = await createClient().on('error', err => console.log('Redis Client Error', err)).connect();
+    await messages.subscribe('messages', messagesListener(io));
 
     io.on('connection', async function (socket : any) {
 
@@ -54,9 +54,9 @@ async function main() : Promise<void> {
          * If an authorization header containing a jwt token is received, 
          * then we call the user authorization function
          */
-        if (socket.handshake.headers.authorization) 
+        if (socket.handshake.query.authorization) 
         {
-            validationStatus = await validateJWT(socket.handshake.headers.authorization, jwt_key);
+            validationStatus = await validateJWT(socket.handshake.query.authorization, jwt_key);
         }
 
         /* If it was not possible to validate the user, then close the connection */
@@ -84,7 +84,6 @@ async function main() : Promise<void> {
         socket.on('disconnect', async function (info : any) {
             await redisTokensWebsocket.sendCommand(['LREM', 'user_' + validationStatus, '0', socket.id]);
         })
-
         
 
         io.emit("Пользователь присоединился!");

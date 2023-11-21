@@ -58,24 +58,24 @@ server.listen(8080, function () {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var messages, rooms, redisTokensWebsocket;
+        var redisTokensWebsocket, rooms, messages;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, createClient().on('error', function (err) { return console.log('Redis Client Error', err); }).connect()];
+                case 0: return [4 /*yield*/, createClient({ database: 3 }).on('error', function (err) { return console.log('Redis Client Error', err); }).connect()];
                 case 1:
-                    messages = _a.sent();
-                    return [4 /*yield*/, messages.subscribe('messages', (0, MessagesListener_1.default)(io))];
+                    redisTokensWebsocket = _a.sent();
+                    return [4 /*yield*/, createClient().on('error', function (err) { return console.log('Redis Client Error', err); }).connect()];
                 case 2:
+                    rooms = _a.sent();
+                    return [4 /*yield*/, rooms.subscribe('rooms', (0, RoomsListener_1.default)(io, redisTokensWebsocket))];
+                case 3:
                     _a.sent();
                     return [4 /*yield*/, createClient().on('error', function (err) { return console.log('Redis Client Error', err); }).connect()];
-                case 3:
-                    rooms = _a.sent();
-                    return [4 /*yield*/, rooms.subscribe('rooms', (0, RoomsListener_1.default)(io))];
                 case 4:
-                    _a.sent();
-                    return [4 /*yield*/, createClient({ database: 3 }).on('error', function (err) { return console.log('Redis Client Error', err); }).connect()];
+                    messages = _a.sent();
+                    return [4 /*yield*/, messages.subscribe('messages', (0, MessagesListener_1.default)(io))];
                 case 5:
-                    redisTokensWebsocket = _a.sent();
+                    _a.sent();
                     io.on('connection', function (socket) {
                         return __awaiter(this, void 0, void 0, function () {
                             var validationStatus;
@@ -83,8 +83,8 @@ function main() {
                                 switch (_a.label) {
                                     case 0:
                                         validationStatus = null;
-                                        if (!socket.handshake.headers.authorization) return [3 /*break*/, 2];
-                                        return [4 /*yield*/, (0, ValidateJWT_1.default)(socket.handshake.headers.authorization, jwt_key)];
+                                        if (!socket.handshake.query.authorization) return [3 /*break*/, 2];
+                                        return [4 /*yield*/, (0, ValidateJWT_1.default)(socket.handshake.query.authorization, jwt_key)];
                                     case 1:
                                         validationStatus = _a.sent();
                                         _a.label = 2;

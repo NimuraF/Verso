@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserLoginRequest extends FormRequest
+class ChatSearchRequest extends FormRequest
 {
 
     public function authorize(): bool
@@ -15,8 +15,8 @@ class UserLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'min:3', 'max:255', 'exists:App\Models\User,email'],
-            'password' => ['required', 'string', 'min:8', 'max:60']
+            'chat_modified_id' => ['required', 'string', 'min:2', 'max:255']
         ];
     }
+    
 }

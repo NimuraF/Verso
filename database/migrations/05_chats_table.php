@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
+            $table->string('modified_id')->nullable();
             $table->string('name');
             $table->string('about');
             $table->string('avatar')->nullable();

@@ -17,7 +17,8 @@ class SendNewMessageToSocketIO implements ShouldQueue
         Redis::publish('messages', json_encode([
             'chat_id' => $event->message->chat_id,
             'author_id' => $event->message->author_id,
-            'message_body' => $event->message->message_body
+            'message_body' => $event->message->message_body,
+            'created_at' => $event->message->created_at
         ]));
     }
 }

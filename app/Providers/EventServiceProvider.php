@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Events\NewChatParticipant;
 use App\Events\NewMessage;
+use App\Events\RemoveChatParticipant;
 use App\Listeners\AddNewChatParticipantToSocketIO;
+use App\Listeners\RemoveChatParticipantToSocketIO;
 use App\Listeners\SendNewMessageToSocketIO;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -19,15 +21,23 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
         NewMessage::class => [
             SendNewMessageToSocketIO::class
         ],
+
         NewChatParticipant::class => [
             AddNewChatParticipantToSocketIO::class
+        ],
+
+        RemoveChatParticipant::class => [
+            RemoveChatParticipantToSocketIO::class
         ]
+        
     ];
 
     /**
