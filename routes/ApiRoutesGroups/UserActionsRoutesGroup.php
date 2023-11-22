@@ -4,7 +4,7 @@ use App\Http\Controllers\User\ChatActionsController;
 use App\Http\Controllers\User\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->prefix('users')->group(function () {
+Route::middleware(['api', 'auth'])->prefix('users')->group(function () {
 
     /* CHATS ACTIONS */
     Route::prefix('chats')->controller(ChatActionsController::class)->group(function () {

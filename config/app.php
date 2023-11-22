@@ -169,7 +169,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+
+        /*
+         * Custom Services Providers...
+         */
+        App\Providers\ServiceProviders\PermissionValidatorProvider::class,
+
         
     ])->toArray(),
 

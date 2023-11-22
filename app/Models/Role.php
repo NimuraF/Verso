@@ -33,7 +33,7 @@ class Role extends Model
      */
     public function permissions() : BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'roles_permissions', 'role_id', 'permission_id', 'id', 'id')->using(RolesPermissions::class);
+        return $this->belongsToMany(Permission::class, 'roles_permissions', 'role_id', 'permission_name', 'id', 'name')->using(RolesPermissions::class);
     }
 
 }

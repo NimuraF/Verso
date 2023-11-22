@@ -20,7 +20,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     protected $primaryKey = 'id';
 
-    protected $with = ['roles'];
+    protected $with = ['roles', 'roles.permissions'];
 
     protected $fillable = [
         'name',

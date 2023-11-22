@@ -7,6 +7,7 @@ use App\Events\ChatEvents\NewChatParticipant;
 use App\Events\ChatEvents\RemoveChatMessage;
 use App\Events\ChatEvents\RemoveChatParticipant;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserActionsRequests\ConnectToChatRequest;
 use App\Http\Requests\UserActionsRequests\NewChatMessageRequest;
 use App\Http\Requests\UserActionsRequests\RemoveChatMessageRequest;
 use App\Http\Resources\ChatResource;
@@ -54,12 +55,8 @@ class ChatActionsController extends Controller
      * @param UsersChats $usersChats
      * @return ChatResource
      */
-    public function connectToChat(Request $request, Chat $chat) : ChatResource
+    public function connectToChat(ConnectToChatRequest $request, Chat $chat) : ChatResource
     {
-        $status = $this->usersChats->where([['user_id', '=', $this->user->id], ['chat_id', '=', $chat->id]])->first();
-
-        if ($status) { throw new AuthorizationException('You are already in this chat'); }
-
         $this->usersChats->create(['user_id' => $this->user->id, 'chat_id' => $chat->id]);
 
         NewChatParticipant::dispatch($chat, $this->user);

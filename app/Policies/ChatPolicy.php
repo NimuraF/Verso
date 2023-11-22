@@ -6,9 +6,36 @@ use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Pivot\UsersChats;
 use App\Models\User;
+use App\Services\Authorization\ValidateUserPermission;
 
 class ChatPolicy
 {
+
+    protected ValidateUserPermission $permissionValidator;
+
+    public function __construct(ValidateUserPermission $permissionValidator)
+    {
+        $this->permissionValidator = $permissionValidator;
+    }
+
+    /**
+     * Checking if the user can join the chat
+     *
+     * @param User $user
+     * @param Chat $chat
+     * @return boolean
+     */
+    public function connectToChat(User $user, Chat $chat) : bool
+    {
+        if($this->permissionValidator->vallidatePermission($user, 'connect-to-chat')) 
+        {
+            if (!UsersChats::where([['user_id', '=', $user->id], ['chat_id', '=', $chat->id]])->first())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Checking whether the user can write messages in this chat

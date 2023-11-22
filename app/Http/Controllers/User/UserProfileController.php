@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class UserProfileController extends Controller
 {
     
-    protected User $user;
+    protected User|null $user;
 
     public function __construct()
     {
