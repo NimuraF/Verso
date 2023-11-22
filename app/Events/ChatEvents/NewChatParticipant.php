@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\ChatEvents;
 
 use App\Models\Chat;
 use App\Models\User;

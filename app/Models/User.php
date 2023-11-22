@@ -14,10 +14,13 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-
     use HasApiTokens, Notifiable;
 
     protected $table = 'users';
+
+    protected $primaryKey = 'id';
+
+    protected $with = ['roles'];
 
     protected $fillable = [
         'name',

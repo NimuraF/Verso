@@ -6,6 +6,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Throwable;
 
@@ -53,6 +54,13 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => $error->getMessage() ?: "Ooops, something went wrong!"
             ], 400);
+        });
+
+        /* NOT FOUND ERROR WITH 404 RESPONSE */
+        $this->renderable(function (NotFoundHttpException $error) {
+            return response()->json([
+                'error' => $error->getMessage() ?: 'The requested page was not found'
+            ], 404);
         });
 
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\ChatEvents;
 
 use App\Models\Chat;
-use App\Models\User;
+use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -12,17 +12,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RemoveChatParticipant
+class RemoveChatMessage
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Chat $chat;
-    public User $user;
+    protected Chat $chat;
+    protected Message $message;
 
-    public function __construct(Chat $chat, User $user)
+    public function __construct(Chat $chat, Message $message)
     {
         $this->chat = $chat;
-        $this->user = $user;
+        $this->message = $message;
     }
 
 }

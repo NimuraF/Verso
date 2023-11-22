@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('about');
             $table->string('avatar')->nullable();
             $table->bigInteger('author_id')->unsigned();
+            $table->boolean('close')->default(false);
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
@@ -31,4 +32,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('chats');
     }
+    
 };

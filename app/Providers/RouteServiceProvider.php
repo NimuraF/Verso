@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Chat;
+use App\Models\Message;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -47,5 +49,12 @@ class RouteServiceProvider extends ServiceProvider
             return Chat::findOrFail($value); 
         });
 
+        Route::bind('message', function (string $value) : Message {
+            return Message::findOrFail($value);
+        });
+
+        Route::bind('profile', function (string $value) : User {
+            return User::findOrFail($value);
+        });
     }
 }

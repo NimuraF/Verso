@@ -16,10 +16,12 @@ class ChatResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'modified_id' => $this->modifie_id,
             'name' => $this->name,
             'about' => $this->about,
             'avatar' => $this->avatar,
             'author_id' => $this->author_id,
+            'created_at' => $this->created_at,
             'last_message' => $this->whenLoaded('last_message')
         ];
     }

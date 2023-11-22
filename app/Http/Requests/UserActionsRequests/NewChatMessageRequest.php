@@ -9,11 +9,12 @@ class NewChatMessageRequest extends FormRequest
 
     public function authorize() : bool
     {
-        if($this->user->cannot('createMessage', $this->chat)) {
-            return false;
+        if($this->user()->can('createMessage', $this->chat)) 
+        {
+            return true;
         }
         
-        return true;
+        return false;
     }
 
     public function rules() : array

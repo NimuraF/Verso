@@ -1,27 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Chat;
 
-use App\Events\NewChatParticipant;
-use App\Events\NewMessage;
-use App\Events\RemoveChatParticipant;
-use App\Http\Requests\ChatSearchRequest;
-use App\Http\Requests\NewChatMessageRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ChatActionsRequests\ChatSearchRequest;
 use App\Http\Resources\ChatResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Chat;
-use App\Models\Message;
-use App\Models\Pivot\UsersChats;
 use App\Models\User;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ChatController extends Controller
 {
-    
+
     protected Chat $chat;
     protected User|null $user;
 
@@ -51,13 +43,9 @@ class ChatController extends Controller
      * @param string $id
      * @return ResourceCollection
      */
-    public function getChatMessages(Request $request, string $id) : ResourceCollection
+    public function getChatMessages(Request $request, Chat $chat) : ResourceCollection
     {
-        return MessageResource::collection($this->chat->findOrFail($id)->messages()->simplePaginate(50));
-    }
-
-    public function deleteMessage(Request $request) {
-
+        return MessageResource::collection($chat->messages()->simplePaginate(50));
     }
 
 }

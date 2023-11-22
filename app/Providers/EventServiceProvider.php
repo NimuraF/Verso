@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Events\NewChatParticipant;
-use App\Events\NewMessage;
-use App\Events\RemoveChatParticipant;
+use App\Events\ChatEvents\NewChatMessage;
+use App\Events\ChatEvents\NewChatParticipant;
+use App\Events\ChatEvents\RemoveChatParticipant;
 use App\Listeners\AddNewChatParticipantToSocketIO;
 use App\Listeners\RemoveChatParticipantToSocketIO;
 use App\Listeners\SendNewMessageToSocketIO;
@@ -26,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        NewMessage::class => [
+        NewChatMessage::class => [
             SendNewMessageToSocketIO::class
         ],
 

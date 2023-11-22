@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\ChatActionsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,32 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 
 /* AUTH ROUTES */
-include __DIR__."/auth.php";
+include __DIR__."/ApiRoutesGroups/AuthRoutesGroup.php";
 
+/* USER ACTIONS GROUP */
+include __DIR__."/ApiRoutesGroups/UserActionsRoutesGroup.php";
 
-Route::middleware(['auth'])->prefix('users')->controller(UserController::class)->group(function () {
-
-    /* CHATS ACTIONS */
-    Route::prefix('chats')->group(function () {
-        Route::get('/', 'getAllUserChats'); //Get list of all chats for current authenticated user
-        Route::post('/{chat}', 'connectToChat')->whereNumber(['chat']); //Connect to chat current authenticated user
-        //Route::delete('/{chat_id}'); //Leave from chat current authenticated user
-    });
-
-});
-
-Route::middleware(['auth'])->prefix('chats')->controller(ChatController::class)->group(function () {
-
-});
-
-//Route::get('/{chat_id}', 'getChatInfo')->whereNumber(['chat_id']);
-
-// Route::middleware(['auth'])->prefix('chats')->controller(UserController::class)->group(function () {
-//     Route::get('/', 'getAllUserChats');
-//     Route::get('/{chat_id}', 'getChatInfo')->whereNumber(['chat_id']);
-//     Route::post('/{chat_id}', 'sendNewChatMessage')->whereNumber(['chat_id']);
-//     Route::post('/connect/{chat_id}', 'connectToChat');
-//     Route::delete('/disconnect/{id}', 'removeChat');
-// });
-
-Route::get('/search', [ChatController::class, 'chatsSearch']);
+/* CHAT ACTIONS GROUP */
+include __DIR__."/ApiRoutesGroups/ChatActionsRoutesGroup.php";

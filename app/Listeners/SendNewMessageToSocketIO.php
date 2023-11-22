@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\NewMessage;
+use App\Events\ChatEvents\NewChatMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Redis;
@@ -12,7 +12,7 @@ class SendNewMessageToSocketIO implements ShouldQueue
 
     public string $connection = 'redis';
 
-    public function handle(NewMessage $event): void
+    public function handle(NewChatMessage $event) : void
     {
         Redis::publish('messages', json_encode([
             'chat_id' => $event->message->chat_id,
