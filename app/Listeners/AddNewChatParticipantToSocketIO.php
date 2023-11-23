@@ -14,7 +14,7 @@ class AddNewChatParticipantToSocketIO implements ShouldQueue
     public function handle(NewChatParticipant $event): void
     {
         Redis::publish('rooms', json_encode([
-            'action' => 'add_user',
+            'action' => 'connect-to-chat',
             'chat' => $event->chat,
             'user' => $event->user
         ]));

@@ -46,9 +46,15 @@ class ChatPolicy
      */
     public function createMessage(User $user, Chat $chat) : bool
     {
-        $isParticipant = UsersChats::where([['chat_id', '=', $chat->id], ['user_id', '=', $user->id]])->first();
+        if ($this->permissionValidator->vallidatePermission($user, 'create-message')) 
+        {
+            if(UsersChats::where([['chat_id', '=', $chat->id], ['user_id', '=', $user->id]])->first()) 
+            {
+                return true;
+            } 
+        }
 
-        return $isParticipant ? true : false;
+        return false;
     }
 
     /**

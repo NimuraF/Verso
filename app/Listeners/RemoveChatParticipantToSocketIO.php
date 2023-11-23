@@ -14,7 +14,7 @@ class RemoveChatParticipantToSocketIO implements ShouldQueue
     public function handle(RemoveChatParticipant $event): void
     {
         Redis::publish('rooms', json_encode([
-            'action' => 'remove_user',
+            'action' => 'disconnect-from-chat',
             'chat' => $event->chat,
             'user' => $event->user
         ]));
