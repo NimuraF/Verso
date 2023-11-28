@@ -27,9 +27,7 @@ class AuthController extends Controller {
         $authParams = $request->only(['email', 'password']);
 
         if(!$token = auth()->attempt($authParams)) {
-
             throw new AuthenticationException('Invalid login or password');
-
         }
 
         return $this->sendResponseWithCookies($request, $token, auth()->user());

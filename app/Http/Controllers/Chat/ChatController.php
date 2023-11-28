@@ -48,4 +48,6 @@ class ChatController extends Controller
         return MessageResource::collection($chat->messages()->simplePaginate(50));
     }
 
+    //public function updateChatInfo()
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Chat;
 
 use App\Events\ChatEvents\RemoveChatParticipant;
 use Illuminate\Contracts\Queue\ShouldQueue;

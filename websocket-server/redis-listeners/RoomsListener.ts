@@ -10,14 +10,14 @@ export default function roomsListener(io : any, redisClient : any) : Function {
 
         switch (channelMessage.action){
 
-            case("add_user"): {
+            case("connect-to-chat"): {
                 for(let i : number = 0; i < socketArray.length; i++) {
                     io.in(socketArray[i]).socketsJoin('chat:' + channelMessage.chat.id);
                     io.to(socketArray[i]).emit("add_to_chat", { chat: channelMessage.chat });
                 }
             }
 
-            case("remove_user"): {
+            case("disconnect-from-chat"): {
                 for(let i : number = 0; i < socketArray.length; i++) {
                     io.in(socketArray[i]).socketsLeave('chat:' + channelMessage.chat.id);
                     io.to(socketArray[i]).emit("remove_from_chat", { chat: channelMessage.chat });
