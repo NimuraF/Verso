@@ -13,7 +13,7 @@ class ValidateUserPermission {
      * @param string $permission
      * @return boolean
      */
-    public function vallidatePermission(User $user, string $permissionName) : bool
+    public function validatePermission(User $user, string $permissionName) : bool
     {
         foreach($user->roles as $role) {
             foreach($role->permissions as $permission) {

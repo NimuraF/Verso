@@ -53,16 +53,16 @@ function roomsListener(io, redisClient) {
                 case 1:
                     socketArray = _a.sent();
                     switch (channelMessage.action) {
-                        case ("add_user"): {
+                        case ("connect-to-chat"): {
                             for (i = 0; i < socketArray.length; i++) {
                                 io.in(socketArray[i]).socketsJoin('chat:' + channelMessage.chat.id);
-                                io.to(socketArray[i]).emit("add_to_chat", { chat: channelMessage.chat });
+                                io.to(socketArray[i]).emit("connect-to-chat", { chat: channelMessage.chat });
                             }
                         }
-                        case ("remove_user"): {
+                        case ("disconnect-from-chat"): {
                             for (i = 0; i < socketArray.length; i++) {
                                 io.in(socketArray[i]).socketsLeave('chat:' + channelMessage.chat.id);
-                                io.to(socketArray[i]).emit("remove_from_chat", { chat: channelMessage.chat });
+                                io.to(socketArray[i]).emit("disconnect-from-chat", { chat: channelMessage.chat });
                             }
                         }
                     }

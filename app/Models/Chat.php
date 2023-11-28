@@ -15,7 +15,11 @@ class Chat extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['name', 'avatar', 'about', 'author_id', 'modified_id'];
+    protected $fillable = ['name', 'avatar', 'about', 'author_id', 'modified_id', 'close'];
+
+    protected $casts = [
+        'close' => 'boolean'
+    ];
 
     /**
      * Messages for current chat instance

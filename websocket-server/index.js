@@ -106,7 +106,7 @@ function main() {
                                         /**
                                          * Subscribe to all received chats
                                          */
-                                        socket.on('subscribe_all', function (chats) {
+                                        socket.on('subscribe-all', function (chats) {
                                             for (var i = 0; i < chats.data.length; i++) {
                                                 socket.join("chat:" + String(chats.data[i].id));
                                             }

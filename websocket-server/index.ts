@@ -75,7 +75,7 @@ async function main() : Promise<void> {
         /**
          * Subscribe to all received chats
          */
-        socket.on('subscribe_all', function (chats : any) {
+        socket.on('subscribe-all', function (chats : any) {
             for (let i : number  = 0; i < chats.data.length; i++) {
                 socket.join("chat:" + String(chats.data[i].id));
             }

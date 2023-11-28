@@ -41,7 +41,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param io
  * @returns Function
  */
-function roomsListener(io) {
+function messagesListener(io) {
     var _this = this;
     return function (message, channel) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -54,4 +54,4 @@ function roomsListener(io) {
         });
     }); };
 }
-exports.default = roomsListener;
+exports.default = messagesListener;

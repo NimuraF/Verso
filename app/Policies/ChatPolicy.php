@@ -12,10 +12,31 @@ class ChatPolicy
 {
 
     protected ValidateUserPermission $permissionValidator;
+    protected UsersChats $usersChatsRelation;
 
-    public function __construct(ValidateUserPermission $permissionValidator)
+    public function __construct(ValidateUserPermission $permissionValidator, UsersChats $relation)
     {
         $this->permissionValidator = $permissionValidator;
+        $this->usersChatsRelation = $relation;
+    }
+
+    /**
+     * Checking if the user can view any information about this chat
+     *
+     * @param User $user
+     * @param Chat $chat
+     * @return boolean
+     */
+    public function getChatInfo(User $user, Chat $chat) : bool
+    {
+        if ($chat->close) 
+        {
+            if (!$this->isUserChatParticipant($user, $chat))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -27,13 +48,51 @@ class ChatPolicy
      */
     public function connectToChat(User $user, Chat $chat) : bool
     {
-        if($this->permissionValidator->vallidatePermission($user, 'connect-to-chat')) 
+        if($this->permissionValidator->validatePermission($user, 'connect-to-chat')) 
         {
-            if (!UsersChats::where([['user_id', '=', $user->id], ['chat_id', '=', $chat->id]])->first())
+            if (!$this->isUserChatParticipant($user, $chat))
             {
                 return true;
             }
         }
+        return false;
+    }
+
+    /**
+     * Checking if the user can create new chats
+     *
+     * @param User $user
+     * @param Chat $chat
+     * @return boolean
+     */
+    public function createNewChat(User $user) : bool
+    {
+        if ($this->permissionValidator->validatePermission($user, 'create-new-chat'))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checking whether the current user can update the transmitted chat
+     *
+     * @param User $user
+     * @param Chat $chat
+     * @return boolean
+     */
+    public function updateExistingChat(User $user, Chat $chat) : bool
+    {
+        if 
+        (
+            $user->id === $chat->author_id
+            || $this->usersChatsRelation->where
+        ) 
+        {
+            return true;
+        }
+
+
         return false;
     }
 
@@ -46,9 +105,9 @@ class ChatPolicy
      */
     public function createMessage(User $user, Chat $chat) : bool
     {
-        if ($this->permissionValidator->vallidatePermission($user, 'create-message')) 
+        if ($this->permissionValidator->validatePermission($user, 'create-message')) 
         {
-            if(UsersChats::where([['chat_id', '=', $chat->id], ['user_id', '=', $user->id]])->first()) 
+            if($this->isUserChatParticipant($user, $chat)) 
             {
                 return true;
             } 
@@ -67,11 +126,25 @@ class ChatPolicy
      */
     public function deleteMessage(User $user, Chat $chat, Message $message) : bool
     {
-        if($user->id === $chat->author_id || $user->id === $message->author_id) {
+        if($user->id === $chat->author_id || $user->id === $message->author_id) 
+        {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * INTERNAL METHOD
+     * Checking if the user is a chat participant
+     *
+     * @param User $user
+     * @param Chat $chat
+     * @return UsersChats|null
+     */
+    private function isUserChatParticipant(User $user, Chat $chat) : UsersChats|null 
+    {
+        return $this->usersChatsRelation->where([['user_id', '=', $user->id], ['chat_id', '=', $chat->id]])->first();
     }
 
 }
