@@ -17,7 +17,8 @@ Route::middleware(['api', 'auth'])->prefix('users')->group(function () {
 
     /* PROFILE ACTIONS */
     Route::controller(UserProfileController::class)->group(function() {
-        Route::get('/{profile}', 'showUserProfile')->whereNumber(['user']);
+        Route::post('/', 'updateUserProfile'); //Update current authenticated user profile
+        Route::get('/{profile}', 'showUserProfile')->whereNumber(['user']); //Show user profile by received ID
     });
 
 });

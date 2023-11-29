@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('modified_id')->nullable();
             $table->string('name');
-            $table->string('about');
+            $table->string('about')->nullable();
             $table->string('avatar')->nullable();
             $table->bigInteger('author_id')->unsigned();
             $table->boolean('close')->default(false);

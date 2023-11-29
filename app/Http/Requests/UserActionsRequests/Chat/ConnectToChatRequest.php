@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\UserActionsRequests;
+namespace App\Http\Requests\UserActionsRequests\Chat;
 
 use App\Services\Authorization\ValidateUserPermission;
 use Illuminate\Foundation\Http\FormRequest;

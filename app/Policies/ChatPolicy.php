@@ -83,15 +83,10 @@ class ChatPolicy
      */
     public function updateExistingChat(User $user, Chat $chat) : bool
     {
-        if 
-        (
-            $user->id === $chat->author_id
-            || $this->usersChatsRelation->where
-        ) 
+        if ($user->id === $chat->author_id) 
         {
             return true;
         }
-
 
         return false;
     }

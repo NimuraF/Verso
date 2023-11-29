@@ -174,6 +174,7 @@ return [
          * Custom Services Providers...
          */
         App\Providers\ServiceProviders\PermissionValidatorProvider::class,
+        App\Providers\ServiceProviders\UpdateUserProfileProvider::class
 
         
     ])->toArray(),

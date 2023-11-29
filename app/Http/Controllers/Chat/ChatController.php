@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Chat;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChatActionsRequests\ChatCreateRequest;
 use App\Http\Requests\ChatActionsRequests\ChatInfoRequest;
 use App\Http\Requests\ChatActionsRequests\ChatSearchRequest;
 use App\Http\Resources\ChatResource;
@@ -32,9 +33,21 @@ class ChatController extends Controller
      */
     public function chatsSearch(ChatSearchRequest $request) : ResourceCollection
     {
-        $chats = $this->chat->where([['modified_id', 'LIKE', '%'.$request->input('chat_modified_id').'%']])->limit(10)->get();
+        $chats = $this->chat->open()->modifiedIdSearch($request->input('chat_modified_id'))->limit(10)->get();
 
         return ChatResource::collection($chats);
+    }
+
+    /**
+     * Create new chat
+     *
+     * @param ChatCreateRequest $request
+     * @return ChatResource
+     */
+    public function createNewChat(ChatCreateRequest $request) : ChatResource
+    {
+        $chat = $this->chat->create(array_merge(['author_id' => $request->user()->id], $request->validated()));
+        return new ChatResource($chat);
     }
 
     /**

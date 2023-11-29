@@ -43,8 +43,6 @@ class AuthController extends Controller {
     {
         $regParams = $request->safe()->only(['name', 'email', 'password']);
 
-        $regParams['password'] = password_hash($regParams['password'], PASSWORD_DEFAULT);
-
         $newUser = User::create($regParams);
 
         $token = auth()->login($newUser);
